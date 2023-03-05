@@ -8,7 +8,7 @@
     "prod": "node ./src/server.js",
     "dev": "nodemon ./src/server.js",
     "lint": "eslint ./src",
-    "fix": "eslint ./src --fix"
+    "lint-fix": "eslint ./src --fix"
   },
   "author": "",
   "license": "ISC",
