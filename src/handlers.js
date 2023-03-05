@@ -11,8 +11,17 @@ const healthCheck = (request, h) => {
 }
 
 const addBook = (request, h) => {
+
+    // req body
     const {
-        name, year, author, summary, publisher, pageCount, readPage, reading,
+        name,
+        year,
+        author,
+        summary,
+        publisher,
+        pageCount,
+        readPage,
+        reading
     } = request.payload
 
     const id = nanoid(16)
@@ -20,6 +29,7 @@ const addBook = (request, h) => {
     const insertedAt = new Date().toISOString()
     const updatedAt = insertedAt
 
+    // temp added book
     const addedBook = {
         id,
         name,
@@ -82,7 +92,14 @@ const addBook = (request, h) => {
 }
 
 const getListBook = (request, h) => {
-    const { name, publisher, reading, finished } = request.query
+   
+    // optional query parameters
+    const {
+        name,
+        publisher,
+        reading,
+        finished
+    } = request.query
 
     if (books.length === 0) {
         const response = h.response({
@@ -131,6 +148,8 @@ const getListBook = (request, h) => {
 }
 
 const getBookById = (request, h) => {
+
+    // mandatory path param
     const { bookId } = request.params
 
     const book = books.filter((n) => n.id === bookId)[0]
@@ -157,37 +176,12 @@ const getBookById = (request, h) => {
 }
 
 const editBookById = (request, h) => {
+   
+    // mandatory path param
     const { bookId } = request.params
 
+    // req body
     const {
-        name, year, author, summary, publisher, pageCount, readPage, reading,
-    } = request.payload
-    const updatedAt = new Date().toISOString()
-    const index = books.findIndex((book) => book.id === bookId)
-
-    if (typeof name === 'undefined') {
-        const response = h.response({
-        status: 'fail',
-        message: 'Gagal memperbarui buku. Mohon isi nama buku',
-        })
-
-        response.code(400)
-        return response
-    }
-
-    if (readPage > pageCount) {
-        const response = h.response({
-        status: 'fail',
-        message: 'Gagal memperbarui buku. readPage tidak boleh lebih besar dari pageCount',
-        })
-
-        response.code(400)
-        return response
-    }
-
-    if (index !== -1) {
-        books[index] = {
-        ...books[index],
         name,
         year,
         author,
@@ -196,12 +190,48 @@ const editBookById = (request, h) => {
         pageCount,
         readPage,
         reading,
-        updatedAt,
+    } = request.payload
+
+    const updatedAt = new Date().toISOString()
+    const index = books.findIndex((book) => book.id === bookId)
+
+    if (typeof name === 'undefined') {
+        const response = h.response({
+            status: 'fail',
+            message: 'Gagal memperbarui buku. Mohon isi nama buku',
+        })
+
+        response.code(400)
+        return response
+    }
+
+    if (readPage > pageCount) {
+        const response = h.response({
+            status: 'fail',
+            message: 'Gagal memperbarui buku. readPage tidak boleh lebih besar dari pageCount',
+        })
+
+        response.code(400)
+        return response
+    }
+
+    if (index !== -1) {
+        books[index] = {
+            ...books[index],
+            name,
+            year,
+            author,
+            summary,
+            publisher,
+            pageCount,
+            readPage,
+            reading,
+            updatedAt,
         }
 
         const response = h.response({
-        status: 'success',
-        message: 'Buku berhasil diperbarui',
+            status: 'success',
+            message: 'Buku berhasil diperbarui',
         })
 
         response.code(200)
@@ -218,6 +248,8 @@ const editBookById = (request, h) => {
 }
 
 const deleteBookById = (request, h) => {
+
+    // mandatory path param
     const { bookId } = request.params
   
     const index = books.findIndex((book) => book.id === bookId)
