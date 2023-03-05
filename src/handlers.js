@@ -82,7 +82,7 @@ const addBook = (request, h) => {
 }
 
 const getListBook = (request, h) => {
-    const { name, reading, finished } = request.query
+    const { name, publisher, reading, finished } = request.query
 
     if (books.length === 0) {
         const response = h.response({
@@ -99,6 +99,10 @@ const getListBook = (request, h) => {
 
     if (typeof name !== 'undefined') {
         filterBook = books.filter((book) => book.name.toLowerCase().includes(name.toLowerCase()))
+    }
+
+    if (typeof publisher !== 'undefined') {
+        filterBook = books.filter((book) => book.publisher.toLowerCase().includes(publisher.toLowerCase()))
     }
 
     if (typeof reading !== 'undefined') {
